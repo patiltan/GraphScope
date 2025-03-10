@@ -281,7 +281,7 @@ public class GraphWriter {
 
     private void addOverwriteVertexOperation(
             OperationBatch.Builder batchBuilder, GraphSchema schema, DataRecord dataRecord) {
-        logger.info("addOverwriteVertexOperation: {} with schema {}", dataRecord.toSt, schema);
+        logger.info("addOverwriteVertexOperation: getVertexRecordKey {} and getProperties {} with schema {}", dataRecord.getVertexRecordKey(), dataRecord.getProperties(), schema);
         VertexRecordKey vertexRecordKey = dataRecord.getVertexRecordKey();
         Map<String, Object> properties = dataRecord.getProperties();
         String label = vertexRecordKey.getLabel();
@@ -292,7 +292,7 @@ public class GraphWriter {
         Map<Integer, PropertyValue> propertyVals = parseRawProperties(vertexDef, properties);
         propertyVals.putAll(pkVals);
         long hashId = getPrimaryKeysHashId(labelId, propertyVals, vertexDef);
-        logger.info("addOverwriteVertexOperation: labelId {} propertyVals {} vertexDef {}", labelId, propertyVals, vertexDef);
+        logger.info("addOverwriteVertexOperation: labelId {} propertyVals {} getPrimaryKeyList {}", labelId, propertyVals, vertexDef.getPrimaryKeyList());
         logger.info("addOverwriteVertexOperation: hashId {}", hashId);
         batchBuilder.addOperation(
                 new OverwriteVertexOperation(
