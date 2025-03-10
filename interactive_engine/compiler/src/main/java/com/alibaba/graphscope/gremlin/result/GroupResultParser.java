@@ -81,7 +81,7 @@ public class GroupResultParser implements GremlinResultParser {
 
     @Override
     public Object parseFrom(IrResult.Results results) {
-        logger.debug("{}", results);
+        logger.info("{}", results);
         IrResult.Record record = results.getRecord();
         List<Object> keys = new ArrayList<>();
         List<Object> values = new ArrayList<>();

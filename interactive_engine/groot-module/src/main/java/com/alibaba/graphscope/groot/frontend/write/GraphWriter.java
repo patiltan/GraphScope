@@ -281,6 +281,7 @@ public class GraphWriter {
 
     private void addOverwriteVertexOperation(
             OperationBatch.Builder batchBuilder, GraphSchema schema, DataRecord dataRecord) {
+        logger.info("addOverwriteVertexOperation: {} with schema {}", dataRecord.toSt, schema);
         VertexRecordKey vertexRecordKey = dataRecord.getVertexRecordKey();
         Map<String, Object> properties = dataRecord.getProperties();
         String label = vertexRecordKey.getLabel();
@@ -291,6 +292,8 @@ public class GraphWriter {
         Map<Integer, PropertyValue> propertyVals = parseRawProperties(vertexDef, properties);
         propertyVals.putAll(pkVals);
         long hashId = getPrimaryKeysHashId(labelId, propertyVals, vertexDef);
+        logger.info("addOverwriteVertexOperation: labelId {} propertyVals {} vertexDef {}", labelId, propertyVals, vertexDef);
+        logger.info("addOverwriteVertexOperation: hashId {}", hashId);
         batchBuilder.addOperation(
                 new OverwriteVertexOperation(
                         new VertexId(hashId), new LabelId(labelId), propertyVals));
@@ -462,6 +465,7 @@ public class GraphWriter {
             Map<Integer, PropertyValue> properties, GraphElement graphElement) {
         List<GraphProperty> pklist = graphElement.getPrimaryKeyList();
         List<byte[]> pks = new ArrayList<>(pklist.size());
+        logger.info("getPkBytes: pklist {}", pklist);
         for (GraphProperty pk : pklist) {
             byte[] valBytes = properties.get(pk.getId()).getValBytes();
             if (valBytes == null) {

@@ -139,7 +139,7 @@ public class ZkDiscovery implements NodeDiscovery {
                 logger.warn("close serviceDiscovery failed", e);
             }
         }
-        logger.debug("ZkDiscovery stopped");
+        logger.info("ZkDiscovery stopped");
     }
 
     private class NodeChangeListener implements ServiceCacheListener {

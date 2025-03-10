@@ -177,7 +177,7 @@ public class GraphPlanner {
             } else if (logicalPlan.getRegularQuery() != null) {
                 String physicalOpt = FrontendConfig.GRAPH_PHYSICAL_OPT.get(graphConfig);
                 if ("proto".equals(physicalOpt.toLowerCase())) {
-                    logger.debug("physical type is proto");
+                    logger.info("physical type is proto");
                     try (GraphRelProtoPhysicalBuilder physicalBuilder =
                             new GraphRelProtoPhysicalBuilder(graphConfig, irMeta, logicalPlan)) {
                         return physicalBuilder.build();
@@ -185,7 +185,7 @@ public class GraphPlanner {
                         throw new RuntimeException(e);
                     }
                 } else {
-                    logger.debug("physical type is ffi");
+                    logger.info("physical type is ffi");
                     try (PhysicalBuilder physicalBuilder =
                             new FfiPhysicalBuilder(graphConfig, irMeta, logicalPlan)) {
                         return physicalBuilder.build();

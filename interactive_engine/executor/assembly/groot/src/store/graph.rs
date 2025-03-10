@@ -366,7 +366,7 @@ fn remove_edge_kind<G: MultiVersionGraph>(
 fn overwrite_vertex<G: MultiVersionGraph>(
     graph: &G, snapshot_id: i64, op: &OperationPb,
 ) -> GraphResult<()> {
-    debug!("overwrite_vertex");
+    info!("overwrite_vertex");
     let data_operation_pb = parse_pb::<DataOperationPb>(op.get_dataBytes())?;
 
     let vertex_id_pb = parse_pb::<VertexIdPb>(data_operation_pb.get_keyBlob())?;

@@ -420,12 +420,18 @@ fn init_otel() -> Result<bool, Box<dyn std::error::Error>> {
             Box::new(EnvResourceDetector::new()),
             Box::new(TelemetryResourceDetector),
         ],
-    );
+    ).merge(&Resource::new(vec![
+        KeyValue::new("service.name", "graphscope-store"),
+        KeyValue::new("service.namespace", "groot"),
+        KeyValue::new("deployment.environment", "experiment"),
+    ]));
 
     let exporter = opentelemetry_otlp::new_exporter()
         .tonic()
         .with_timeout(Duration::from_secs(5))
         .with_endpoint(endpoint.clone());
+//         .with_insecure(true);  // Disable TLS for testing
+
     // .with_metadata(metadata.clone());
     let _tracer = init_tracer(resource.clone(), exporter)?;
 
@@ -433,6 +439,7 @@ fn init_otel() -> Result<bool, Box<dyn std::error::Error>> {
         .tonic()
         .with_timeout(Duration::from_secs(5))
         .with_endpoint(endpoint);
+//         .with_insecure(true);  // Disable TLS for testing
     // .with_metadata(metadata);
 
     let _meter = init_meter_provider(resource, exporter)?;

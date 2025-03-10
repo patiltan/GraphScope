@@ -77,7 +77,7 @@ impl MultiVersionGraph for GraphStore {
         &self, si: SnapshotId, vertex_id: VertexId, label_id: Option<LabelId>,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Option<Self::V>> {
-        debug!("get_vertex {:?}, {:?}, {:?}", vertex_id, label_id, property_ids);
+        info!("get_vertex {:?}, {:?}, {:?}", vertex_id, label_id, property_ids);
         if let Some(label_id) = label_id {
             self.get_vertex_from_label(si, vertex_id, label_id, property_ids)
         } else {
@@ -100,7 +100,7 @@ impl MultiVersionGraph for GraphStore {
         &self, si: SnapshotId, edge_id: EdgeId, edge_relation: Option<&EdgeKind>,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Option<Self::E>> {
-        debug!("get_edge {:?}", edge_id);
+        info!("get_edge {:?}", edge_id);
         if let Some(relation) = edge_relation {
             self.get_edge_from_relation(si, edge_id, relation, property_ids)
         } else {
@@ -132,7 +132,7 @@ impl MultiVersionGraph for GraphStore {
         &self, si: SnapshotId, label_id: Option<LabelId>, condition: Option<&Condition>,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Records<Self::V>> {
-        debug!("scan_vertex {:?}, {:?}, {:?}", label_id, condition, property_ids);
+        info!("scan_vertex {:?}, {:?}, {:?}", label_id, condition, property_ids);
         let with_prop = property_ids.is_some();
         let mut iter = match label_id {
             Some(label_id) => {
@@ -191,14 +191,14 @@ impl MultiVersionGraph for GraphStore {
         &self, si: SnapshotId, label_id: Option<LabelId>, condition: Option<&Condition>,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Records<Self::E>> {
-        debug!("scan_edge {:?}", label_id);
+        info!("scan_edge {:?}", label_id);
         self.query_edges(si, None, EdgeDirection::Both, label_id, condition, property_ids)
     }
     fn get_out_edges(
         &self, si: SnapshotId, vertex_id: VertexId, label_id: Option<LabelId>,
         condition: Option<&Condition>, property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Records<Self::E>> {
-        debug!("get_out_edges {:?}, {:?}", vertex_id, label_id);
+        info!("get_out_edges {:?}, {:?}", vertex_id, label_id);
         self.query_edges(si, Some(vertex_id), EdgeDirection::Out, label_id, condition, property_ids)
     }
 
@@ -206,14 +206,14 @@ impl MultiVersionGraph for GraphStore {
         &self, si: SnapshotId, vertex_id: VertexId, label_id: Option<LabelId>,
         condition: Option<&Condition>, property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Records<Self::E>> {
-        debug!("get_in_edges {:?}, {:?}", vertex_id, label_id);
+        info!("get_in_edges {:?}, {:?}", vertex_id, label_id);
         self.query_edges(si, Some(vertex_id), EdgeDirection::In, label_id, condition, property_ids)
     }
 
     fn get_out_degree(
         &self, si: SnapshotId, vertex_id: VertexId, label_id: Option<LabelId>,
     ) -> GraphResult<usize> {
-        debug!("get_out_degree {:?}, {:?}", vertex_id, label_id);
+        info!("get_out_degree {:?}, {:?}", vertex_id, label_id);
         let edges_iter = self.get_out_edges(si, vertex_id, label_id, None, Some(vec![]).as_ref())?;
         Ok(edges_iter.count())
     }
@@ -221,7 +221,7 @@ impl MultiVersionGraph for GraphStore {
     fn get_in_degree(
         &self, si: SnapshotId, vertex_id: VertexId, label_id: Option<LabelId>,
     ) -> GraphResult<usize> {
-        debug!("get_in_degree {:?}, {:?}", vertex_id, label_id);
+        info!("get_in_degree {:?}, {:?}", vertex_id, label_id);
         let edges_iter = self.get_in_edges(si, vertex_id, label_id, None, Some(vec![]).as_ref())?;
         Ok(edges_iter.count())
     }
@@ -230,7 +230,7 @@ impl MultiVersionGraph for GraphStore {
         &self, si: SnapshotId, vertex_id: VertexId, edge_relation: &EdgeKind, k: SerialId,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Option<Self::E>> {
-        debug!("get_kth_out_edge");
+        info!("get_kth_out_edge");
         let mut edges_iter =
             self.get_out_edges(si, vertex_id, Some(edge_relation.get_edge_label_id()), None, property_ids)?;
         edges_iter.nth(k as usize).transpose()
@@ -240,7 +240,7 @@ impl MultiVersionGraph for GraphStore {
         &self, si: SnapshotId, vertex_id: VertexId, edge_relation: &EdgeKind, k: SerialId,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Option<Self::E>> {
-        debug!("get_kth_in_edge");
+        info!("get_kth_in_edge");
         let mut edges_iter =
             self.get_in_edges(si, vertex_id, Some(edge_relation.get_edge_label_id()), None, property_ids)?;
         edges_iter.nth(k as usize).transpose()
@@ -420,7 +420,7 @@ impl MultiVersionGraph for GraphStore {
     fn insert_overwrite_vertex(
         &self, si: SnapshotId, id: VertexId, label: LabelId, properties: &dyn PropertyMap,
     ) -> GraphResult<()> {
-        debug!("si {:?}, id {:?}, insert_overwrite_vertex", si, id);
+        info!("si {:?}, id {:?}, insert_overwrite_vertex", si, id);
 
         self.check_si_guard(si)?;
         let res = self
@@ -435,7 +435,7 @@ impl MultiVersionGraph for GraphStore {
     fn insert_update_vertex(
         &self, si: i64, id: i64, label: LabelId, properties: &dyn PropertyMap,
     ) -> GraphResult<()> {
-        debug!("insert_update_vertex");
+        info!("insert_update_vertex");
         self.check_si_guard(si)?;
         let info = res_unwrap!(self.vertex_manager.get_type(si, label), si, id, label)?;
         match res_unwrap!(self.get_vertex_data(si, id, info.as_ref()), insert_update_vertex, si, id, label)?
@@ -463,7 +463,7 @@ impl MultiVersionGraph for GraphStore {
     fn clear_vertex_properties(
         &self, si: i64, id: i64, label: LabelId, prop_ids: &[PropertyId],
     ) -> GraphResult<()> {
-        debug!("clear_vertex_properties");
+        info!("clear_vertex_properties");
         self.check_si_guard(si)?;
         let info = res_unwrap!(self.vertex_manager.get_type(si, label), si, id, label)?;
         if let Some(data) = self.get_vertex_data(si, id, &info)? {
@@ -481,7 +481,7 @@ impl MultiVersionGraph for GraphStore {
     }
 
     fn delete_vertex(&self, si: i64, id: i64, label: LabelId) -> GraphResult<()> {
-        debug!("delete_vertex");
+        info!("delete_vertex");
         self.check_si_guard(si)?;
         let info = res_unwrap!(self.vertex_manager.get_type(si, label), si, id, label)?;
         if let Some(table) = info.get_table(si) {
@@ -497,7 +497,7 @@ impl MultiVersionGraph for GraphStore {
     fn insert_overwrite_edge(
         &self, si: i64, id: EdgeId, edge_kind: &EdgeKind, forward: bool, properties: &dyn PropertyMap,
     ) -> GraphResult<()> {
-        debug!("insert_overwrite_edge");
+        info!("insert_overwrite_edge");
         self.check_si_guard(si)?;
         let direction = if forward { EdgeDirection::Out } else { EdgeDirection::In };
         let res = self
@@ -511,7 +511,7 @@ impl MultiVersionGraph for GraphStore {
     fn insert_update_edge(
         &self, si: i64, id: EdgeId, edge_kind: &EdgeKind, forward: bool, properties: &dyn PropertyMap,
     ) -> GraphResult<()> {
-        debug!("insert_update_edge, {:?}, {:?}, {}", id, edge_kind, forward);
+        info!("insert_update_edge, {:?}, {:?}, {}", id, edge_kind, forward);
         self.check_si_guard(si)?;
 
         // if edge id is not 0, it may be existed edge id, or next edge id to be created.
@@ -551,7 +551,7 @@ impl MultiVersionGraph for GraphStore {
     fn clear_edge_properties(
         &self, si: i64, id: EdgeId, edge_kind: &EdgeKind, forward: bool, prop_ids: &[PropertyId],
     ) -> GraphResult<()> {
-        debug!("clear_edge_properties");
+        info!("clear_edge_properties");
         self.check_si_guard(si)?;
 
         let mut complete_id = id;
@@ -773,7 +773,7 @@ impl GraphStore {
     fn get_vertex_data(
         &self, si: SnapshotId, id: VertexId, info: &VertexTypeInfo,
     ) -> GraphResult<Option<Vec<u8>>> {
-        debug!("get_vertex_data");
+        info!("get_vertex_data");
         if let Some(table) = info.get_table(si) {
             let key = vertex_key(table.id, id, si - table.start_si);
             let mut iter = self.storage.scan_from(&key)?;
@@ -790,7 +790,7 @@ impl GraphStore {
     fn get_edge_data(
         &self, si: SnapshotId, id: EdgeId, info: &EdgeKindInfo, direction: EdgeDirection,
     ) -> GraphResult<Option<Vec<u8>>> {
-        debug!("get_edge_data");
+        info!("get_edge_data");
         if let Some(table) = info.get_table(si) {
             let ts = si - table.start_si;
             let key = edge_key(table.id, id, direction, ts);
@@ -808,7 +808,7 @@ impl GraphStore {
     fn do_insert_vertex_data(
         &self, si: SnapshotId, info: &VertexTypeInfo, id: VertexId, properties: &dyn PropertyMap,
     ) -> GraphResult<()> {
-        debug!("si {:?}, id {:?}, do_insert_vertex_data", si, id);
+        info!("si {:?}, id {:?}, do_insert_vertex_data", si, id);
 
         if let Some(table) = info.get_table(si) {
             let encoder = res_unwrap!(info.get_encoder(si), do_insert_vertex_data)?;
@@ -830,7 +830,7 @@ impl GraphStore {
         &self, si: SnapshotId, edge_id: EdgeId, info: &EdgeKindInfo, direction: EdgeDirection,
         properties: &dyn PropertyMap,
     ) -> GraphResult<()> {
-        debug!("do_insert_edge_data {:?} {:?}", edge_id, direction);
+        info!("do_insert_edge_data {:?} {:?}", edge_id, direction);
         if let Some(table) = info.get_table(si) {
             let encoder = res_unwrap!(info.get_encoder(si), do_insert_edge_data)?;
             let mut buf = Vec::new();
@@ -876,7 +876,7 @@ impl GraphStore {
         &self, si: SnapshotId, vertex_id: VertexId, label_id: LabelId,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Option<RocksVertexImpl>> {
-        debug!("get_vertex_from_label {:?}, {:?}, {:?}", vertex_id, label_id, property_ids);
+        info!("get_vertex_from_label {:?}, {:?}, {:?}", vertex_id, label_id, property_ids);
         let si = si as i64;
         let vertex_type_info = self
             .vertex_manager
@@ -907,7 +907,7 @@ impl GraphStore {
         &self, si: SnapshotId, edge_id: EdgeId, edge_relation: &EdgeKind,
         property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Option<RocksEdgeImpl>> {
-        debug!("get_edge_from_relation, {:?}, {:?}", edge_id, edge_relation);
+        info!("get_edge_from_relation, {:?}, {:?}", edge_id, edge_relation);
         let si = si as i64;
         let info = self
             .edge_manager
@@ -938,7 +938,7 @@ impl GraphStore {
         &self, si: SnapshotId, vertex_id: Option<VertexId>, direction: EdgeDirection,
         label_id: Option<LabelId>, condition: Option<&Condition>, property_ids: Option<&Vec<PropertyId>>,
     ) -> GraphResult<Records<RocksEdgeImpl>> {
-        debug!("query_edges {:?}, {:?}, {:?} {:?}", vertex_id, label_id, property_ids, direction);
+        info!("query_edges {:?}, {:?}, {:?} {:?}", vertex_id, label_id, property_ids, direction);
         let with_prop = property_ids.is_some();
         let mut iter = match label_id {
             Some(label_id) => {
@@ -1051,7 +1051,7 @@ impl GraphStore {
         &self, si: i64, label_id: LabelId, src_id: VertexId, dst_id: VertexId, direction: EdgeDirection,
     ) -> GraphResult<RocksEdgeImpl> {
         let iter = self.query_edges(si, Some(src_id), direction, Some(label_id), None, None);
-        debug!("get_edge_by_vertex {:?}, {}, {}, {:?}", label_id, src_id, dst_id, direction);
+        info!("get_edge_by_vertex {:?}, {}, {}, {:?}", label_id, src_id, dst_id, direction);
         let target_id = if direction == EdgeDirection::Out { dst_id } else { src_id };
         match iter {
             Ok(mut iter) => {
@@ -1061,7 +1061,7 @@ impl GraphStore {
                             if edge.get_dst_id() == target_id {
                                 return Ok(edge);
                             } else {
-                                debug!("This edge doesn't match, continue")
+                                info!("This edge doesn't match, continue")
                             }
                         }
                         Err(err) => {

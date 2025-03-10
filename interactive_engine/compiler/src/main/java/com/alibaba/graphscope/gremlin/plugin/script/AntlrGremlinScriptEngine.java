@@ -60,7 +60,7 @@ public class AntlrGremlinScriptEngine extends AbstractScriptEngine implements Gr
     public Object eval(String script, ScriptContext ctx) {
         return ClassUtils.callException(
                 () -> {
-                    logger.debug("antlr-gremlin start to eval \"{}\"", script);
+                    logger.info("antlr-gremlin start to eval \"{}\"", script);
                     Bindings globalBindings = ctx.getBindings(ScriptContext.ENGINE_SCOPE);
                     GraphTraversalSource g = (GraphTraversalSource) globalBindings.get("g");
                     GremlinAntlrToJava antlrToJava = new GremlinAntlrToJava(g);

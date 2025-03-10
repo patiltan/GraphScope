@@ -70,7 +70,7 @@ public class Glogue {
             }
             List<ExtendStep> extendSteps = pattern.getExtendSteps(schema);
             for (ExtendStep extendStep : extendSteps) {
-                logger.debug(extendStep.toString());
+                logger.info(extendStep.toString());
                 Pattern newPattern = pattern.extend(extendStep);
                 Optional<Pattern> existingPattern = this.getGlogueVertex(newPattern);
                 if (!existingPattern.isPresent()) {

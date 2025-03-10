@@ -53,7 +53,7 @@ public class NodeNameResolver extends NameResolver implements NodeDiscovery.List
 
     @Override
     public void start(Listener2 listener) {
-        logger.debug("starting resolver for role [{}] #[{}]", roleType, idx);
+        logger.info("starting resolver for role [{}] #[{}]", roleType, idx);
         this.listener = listener;
         this.discovery.addListener(this);
     }
@@ -65,7 +65,7 @@ public class NodeNameResolver extends NameResolver implements NodeDiscovery.List
 
     @Override
     public void nodesJoin(RoleType role, Map<Integer, GrootNode> nodes) {
-        logger.debug("Add nodes {} for role {}, roleType {}", nodes, role, roleType);
+        logger.info("Add nodes {} for role {}, roleType {}", nodes, role, roleType);
         if (role != this.roleType) {
             return;
         }

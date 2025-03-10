@@ -89,19 +89,19 @@ public class ChannelManager {
                     roleToChannels.entrySet()) {
                 RoleType role = roleToEntry.getKey();
                 Map<Integer, ManagedChannel> idToChannel = roleToEntry.getValue();
-                logger.debug("shutdown channels for role [" + role.getName() + "] now");
+                logger.info("shutdown channels for role [" + role.getName() + "] now");
                 for (ManagedChannel channel : idToChannel.values()) {
                     channel.shutdown();
                 }
             }
             this.roleToChannels = null;
         }
-        logger.debug("ChannelManager stopped");
+        logger.info("ChannelManager stopped");
     }
 
     public void registerRole(RoleType role) {
         this.targetRoles.add(role);
-        logger.debug("role [" + role.getName() + "] registered");
+        logger.info("role [" + role.getName() + "] registered");
     }
 
     private ManagedChannel createChannel(RoleType role, int idx) {

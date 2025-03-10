@@ -221,7 +221,7 @@ public class GlogueSchema {
     public Double getVertexTypeCardinality(Integer vertexType) {
         Double cardinality = this.vertexTypeCardinality.get(vertexType);
         if (cardinality == null) {
-            logger.debug(
+            logger.info(
                     "Vertex type {} not found in schema, assuming cardinality 1.0", vertexType);
             return 1.0;
         } else {
@@ -232,7 +232,7 @@ public class GlogueSchema {
     public Double getEdgeTypeCardinality(EdgeTypeId edgeType) {
         Double cardinality = this.edgeTypeCardinality.get(edgeType);
         if (cardinality == null) {
-            logger.debug("Edge type {} not found in schema, assuming cardinality 1.0", edgeType);
+            logger.info("Edge type {} not found in schema, assuming cardinality 1.0", edgeType);
             return 1.0;
         } else {
             return cardinality;

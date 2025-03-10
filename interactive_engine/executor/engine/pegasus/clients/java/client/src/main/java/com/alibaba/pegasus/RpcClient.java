@@ -116,7 +116,7 @@ public class RpcClient {
                 return;
             }
             Status status = Status.fromThrowable(throwable);
-            logger.debug("get job response error: {}", status);
+            logger.info("get job response error: {}", status);
             processor.error(status);
         }
 

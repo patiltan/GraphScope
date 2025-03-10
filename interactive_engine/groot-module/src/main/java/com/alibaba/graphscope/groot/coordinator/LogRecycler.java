@@ -79,7 +79,7 @@ public class LogRecycler {
             }
             this.scheduler = null;
         }
-        logger.debug("LogRecycler stopped");
+        logger.info("LogRecycler stopped");
     }
 
     private void doRecycle() {

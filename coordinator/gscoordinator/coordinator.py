@@ -52,8 +52,10 @@ def config_logging(log_level):
     # `NOTSET` is special as it doesn't show log in Python
     if isinstance(log_level, str):
         log_level = getattr(logging, log_level.upper())
-    if log_level == logging.NOTSET:
-        log_level = logging.DEBUG
+    # if log_level == logging.NOTSET:
+    #     log_level = logging.INFO
+
+    log_level = logging.INFO
 
     logger = logging.getLogger("graphscope")
     logger.setLevel(log_level)
@@ -89,6 +91,7 @@ def launch_graphscope():
         config = Config.load(args.config_file)
     else:
         raise RuntimeError("Must specify a config or config-file")
+
 
     config_logging(config.log_level)
     logger.info("Start server with args \n%s", config.dumps_yaml())

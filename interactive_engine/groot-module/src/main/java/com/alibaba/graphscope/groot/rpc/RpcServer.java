@@ -87,7 +87,7 @@ public class RpcServer {
                 // Do nothing
             }
         }
-        logger.debug("RpcServer stopped");
+        logger.info("RpcServer stopped");
     }
 
     public int getPort() {

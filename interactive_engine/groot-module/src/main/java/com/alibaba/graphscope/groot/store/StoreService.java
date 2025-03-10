@@ -272,7 +272,7 @@ public class StoreService {
                                         System.currentTimeMillis() - start, attrs.build());
                                 this.writeCounter.add(batch.getOperationCount(), attrs.build());
                             } //  else {
-                            //     logger.debug("marker batch ignored");
+                            //     logger.info("marker batch ignored");
                             // }
                         } catch (Exception ex) {
                             metricLogger.info(buildMetricJsonLog(false, batch, start, partitionId));
@@ -352,7 +352,7 @@ public class StoreService {
                             Statistics statistics =
                                     entry.getValue().getGraphStatisticsBlob(snapshotId);
                             statisticsMap.put(entry.getKey(), statistics);
-                            logger.debug("Collected statistics of partition#{}", entry.getKey());
+                            logger.info("Collected statistics of partition#{}", entry.getKey());
                         } catch (IOException e) {
                             logger.error(
                                     "Collect statistics failed for partition {}",
@@ -479,7 +479,7 @@ public class StoreService {
         this.garbageCollectExecutor.execute(
                 () -> {
                     try {
-                        // logger.debug("Garbage collecting, snapshot [{}]", snapshotId);
+                        // logger.info("Garbage collecting, snapshot [{}]", snapshotId);
                         garbageCollectInternal(snapshotId);
                         callback.onCompleted(null);
                     } catch (Exception e) {

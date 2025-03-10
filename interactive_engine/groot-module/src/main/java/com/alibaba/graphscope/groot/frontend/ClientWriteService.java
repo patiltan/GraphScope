@@ -45,7 +45,7 @@ public class ClientWriteService extends ClientWriteGrpc.ClientWriteImplBase {
         String upTraceId = optionsPb == null ? null : optionsPb.getTraceId();
         int count = request.getWriteRequestsCount();
         List<WriteRequest> writeRequests = new ArrayList<>(count);
-        logger.debug(
+        logger.info(
                 "batchWrite: requestId {} writeSession {} batchSize {}",
                 requestId,
                 writeSession,

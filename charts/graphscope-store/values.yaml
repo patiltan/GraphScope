@@ -19,19 +19,19 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: ""
+  storageClass: "gp2"
 
 image:
-  registry: registry.cn-hongkong.aliyuncs.com
-  repository: graphscope/graphscope-store
+  registry: 539247478380.dkr.ecr.us-east-1.amazonaws.com
+  repository: graphscope-images
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.30.0"
+  tag: "graphscope-store-patiltan"
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   ## Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ## Example:
@@ -49,7 +49,7 @@ test:
 ## GraphScope Store parameters
 ##
 store:
-  replicaCount: 1
+  replicaCount: 2
 
   ## GraphScope store container's resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -119,7 +119,7 @@ store:
 ## GraphScope Frontend parameters
 ##
 frontend:
-  replicaCount: 1
+  replicaCount: 2
   ## GraphScope store container's resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
@@ -130,7 +130,7 @@ frontend:
   service:
     ## Service type
     ##
-    type: NodePort
+    type: LoadBalancer
     ## Service port
     ##
     servicePort: 55556
@@ -149,8 +149,8 @@ frontend:
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     ##
     nodePorts:
-      service: ""
-      gremlin: ""
+      service: "31394"
+      gremlin: "32326"
     ## Service clusterIP
     ##
     # clusterIP: None
@@ -170,9 +170,19 @@ frontend:
     ##   - 10.10.10.0/24
     ##
     loadBalancerSourceRanges: []
-    ## Provide any additional annotations which may be required
-    ##
-    annotations: {}
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+      service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+      service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "60"
+      service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+      service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: preserve_client_ip.enabled=true,proxy_protocol_v2.enabled=true
+      service.beta.kubernetes.io/aws-load-balancer-internal: "true" # Marks the load balancer as internal
+      service.beta.kubernetes.io/aws-load-balancer-security-groups: "sg-0712d16627567fd44" # Assigns security groups to the load balancer
+      # DNS consistency
+      service.beta.kubernetes.io/aws-load-balancer-name: "graphscope-groot-corerelations"
+      external-dns.alpha.kubernetes.io/ttl: "30"
+      external-dns.alpha.kubernetes.io/hostname: "graphscope-groot.corerelations.com"
+
 
 
   ## @param hostAliases pods host aliases
@@ -263,7 +273,7 @@ portal:
   coordinatorImage:
     registry: registry.cn-hongkong.aliyuncs.com
     repository: graphscope/coordinator
-    tag: "0.30.0"
+    tag: "0.31.0"
   ## Service parameters
   ##
   service:
@@ -374,8 +384,6 @@ commonLabels: {}
 ## @param commonAnnotations Annotations to add to all deployed objects
 ##
 commonAnnotations: {}
-## @param extraDeploy Array of extra objects to deploy with the release
-##
 
 ## Configure extra options for containers' liveness, readiness and startup probes
 livenessProbe:
@@ -468,7 +476,16 @@ affinity: {}
 ## @param nodeSelector Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##
-nodeSelector: {}
+
+coordinatorNodeSelector:
+  workloadtype: groot-coordinator
+
+frontendNodeSelector:
+  workloadtype: groot-frontend
+
+storeNodeSelector:
+  workloadtype: groot-store
+
 ## @param tolerations Tolerations for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
@@ -531,7 +548,7 @@ javaOpts: ""
 rpcMaxBytesMb: 20
 
 ## choose between "file" or "zookeeper"
-discoveryMode: "file"
+discoveryMode: "zookeeper"
 
 ## Coordinator Config
 snapshotIncreaseIntervalMs: 1000
@@ -564,6 +581,9 @@ kafka:
     ##
     port: 9092
   socketRequestMaxBytes: _1048576000
+  nodeSelector:
+    workloadtype: groot-ingestor
+
 
 ## Zk Config
 zkBasePath: "/graphscope/groot"
@@ -585,8 +605,6 @@ kafkaProducerCustomConfigs: ""
 ## If not set, the bundled zookeeper in kafka cluster will be used
 externalZookeeper:
   servers: []
-
-zkBasePath: "/graphscope/groot"
 
 ## Frontend Config
 # gremlinServerPort: 12312
@@ -645,7 +663,7 @@ backup:
   enabled: false
 
 otel:
-  enabled: false
+  enabled: true
   collector:
     image:
       registry: docker.io
@@ -665,12 +683,17 @@ uptrace:
   # token is set within uptrace config
   token: "project2_secret_token"
 
+adot:
+  enabled: true
+  endpoint: "adot-collector-collector.groot.svc.cluster.local"
+  port: 4317
+
 distributed:
-  enabled: false
+  enabled: true
 
 collect:
   statistics:
-    enabled: false
+    enabled: true
     initial:
       delay: 5
     interval: 60

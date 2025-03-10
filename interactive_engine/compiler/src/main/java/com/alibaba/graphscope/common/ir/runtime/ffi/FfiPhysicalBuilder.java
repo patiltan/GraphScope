@@ -174,7 +174,7 @@ public class FfiPhysicalBuilder extends RegularPhysicalBuilder<Pointer> {
             appendSink(new IntByReference(this.planPointer.lastIdx));
             planJson = getPlanAsJson();
             int planId = Objects.hash(logicalPlan);
-            logger.debug("plan id is {}", planId);
+            logger.info("plan id is {}", planId);
             FfiData.ByValue ffiData =
                     LIB.buildPhysicalPlan(
                             this.planPointer.ptrPlan,

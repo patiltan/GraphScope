@@ -100,7 +100,7 @@ public class SnapshotCache {
                                 > Long.parseLong(oldGraphDef.getVersion()))) {
             newSnapshotInfoBuilder.setGraphDef(graphDef);
             logger.info("schema updated. schema version [" + graphDef.getVersion() + "]");
-            logger.debug(graphDef.toProto().toString());
+            logger.info(graphDef.toProto().toString());
         }
         this.snapshotWithSchemaRef.set(newSnapshotInfoBuilder.build());
         logger.debug("snapshotId update to [" + snapshotId + "]");
@@ -114,7 +114,7 @@ public class SnapshotCache {
                 for (SnapshotListener listener : listeners) {
                     try {
                         listener.onSnapshotAvailable();
-                        logger.info("notify listener for snapshot id [" + listenSnapshotId + "]");
+                        logger.debug("notify listener for snapshot id [" + listenSnapshotId + "]");
                     } catch (Exception e) {
                         logger.warn(
                                 "trigger snapshotListener failed. snapshotId [" + snapshotId + "]");

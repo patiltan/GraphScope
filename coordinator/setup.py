@@ -331,7 +331,7 @@ def parsed_reqs():
             os.path.join(repo_root, "requirements.txt"), "r", encoding="utf-8"
         ) as fp:
             pkgs = fp.read().splitlines()
-            pkgs.append(f"graphscope_client == {version}")
+            pkgs.append(f"graphscope_client == 0.29.0")
             return pkgs
     elif name == "graphscope":
         return [

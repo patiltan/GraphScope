@@ -38,7 +38,7 @@ public class LocalSnapshotListener implements QuerySnapshotListener {
 
     @Override
     public void snapshotAdvanced(long snapshotId, long ddlSnapshotId) {
-        logger.debug("snapshot advance to [{}]-[{}]", snapshotId, ddlSnapshotId);
+        logger.info("snapshot advance to [{}]-[{}]", snapshotId, ddlSnapshotId);
         GraphDef graphDef = null;
         if (ddlSnapshotId > this.lastDdlSnapshotId.get()) {
             graphDef = this.schemaManager.getGraphDef();

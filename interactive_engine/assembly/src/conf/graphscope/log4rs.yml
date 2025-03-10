@@ -10,3 +10,10 @@ root:
   level: info
   appenders:
     - stdout
+
+# Added these logger configurations
+loggers:
+  io.grpc:
+    level: warn
+  io.netty:
+    level: warn

@@ -1,12 +1,12 @@
 ARG ARCH=amd64
 ARG REGISTRY=registry.cn-hongkong.aliyuncs.com
 ARG VINEYARD_VERSION=latest
-FROM $REGISTRY/graphscope/graphscope-dev:$VINEYARD_VERSION-$ARCH as builder
+FROM $REGISTRY/graphscope-images:$VINEYARD_VERSION-$ARCH as builder
 
 ARG CI=false
 ARG ENABLE_COORDINATOR=false
 
-ARG profile=debug
+ARG profile=release
 ENV profile=$profile
 
 COPY --chown=graphscope:graphscope . /home/graphscope/graphscope
@@ -19,12 +19,12 @@ RUN rustup toolchain install 1.81.0 && rustup default 1.81.0
 RUN cd /home/graphscope/graphscope \
     && . ~/.graphscope_env \
     && cd /home/graphscope/graphscope/interactive_engine \
-    && mvn clean package -P groot -DskipTests --quiet -Drust.compile.mode="$profile" \
+    && mvn clean package -P groot -DskipTests --quiet -Drust.compile.mode="$profile" -Drust.compile.target="groot" -e \
     && tar xzf /home/graphscope/graphscope/interactive_engine/assembly/target/groot.tar.gz -C /home/graphscope/
 
 # build coordinator
 RUN if [ "${ENABLE_COORDINATOR}" = "true" ]; then \
-      cd /home/graphscope/graphscope/flex/coordinator \
+      cd /home/graphscope/graphscope/coordinator \
       && python3 setup.py bdist_wheel \
       && mkdir -p /home/graphscope/groot/wheel \
       && cp dist/*.whl /home/graphscope/groot/wheel; \

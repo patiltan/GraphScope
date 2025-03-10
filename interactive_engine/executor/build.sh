@@ -1,9 +1,9 @@
 set -e
 set -x
 
-MODE=$1
+MODE="release"
 SKIP=$2
-TARGET=$3
+TARGET="groot"
 FEATURE=$4
 
 if [ "$SKIP" = "true" ]; then

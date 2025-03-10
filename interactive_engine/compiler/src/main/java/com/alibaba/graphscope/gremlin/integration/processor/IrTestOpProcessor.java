@@ -108,7 +108,7 @@ public class IrTestOpProcessor extends IrStandardOpProcessor {
     public ThrowingConsumer<Context> select(Context ctx) {
         final RequestMessage message = ctx.getRequestMessage();
         final ThrowingConsumer<Context> op;
-        logger.debug("tokens ops is {}", message.getOp());
+        logger.info("tokens ops is {}", message.getOp());
         switch (message.getOp()) {
             case Tokens.OPS_BYTECODE:
                 op =

@@ -106,7 +106,7 @@ public class DynamicIrMetaFetcher extends IrMetaFetcher implements AutoCloseable
             boolean statsEnabled = getStatsEnabled(this.currentState.getGraphId());
             if (statsEnabled && this.statsState != StatsState.SYNCED
                     || (!statsEnabled && this.statsState != StatsState.MOCKED)) {
-                logger.debug("start to sync stats");
+                logger.info("start to sync stats");
                 syncStats();
             }
         } catch (Throwable e) {
@@ -134,7 +134,7 @@ public class DynamicIrMetaFetcher extends IrMetaFetcher implements AutoCloseable
                 boolean statsEnabled = getStatsEnabled(this.currentState.getGraphId());
                 if (statsEnabled) {
                     GraphStatistics stats = this.reader.readStats(this.currentState.getGraphId());
-                    logger.debug("statistics from remote: {}", stats);
+                    logger.info("statistics from remote: {}", stats);
                     if (stats != null && stats.getVertexCount() != 0) {
                         this.currentState =
                                 new IrMetaStats(

@@ -102,7 +102,7 @@ public class WriterAgent {
         this.consumeThread.setName("store-consume");
         this.consumeThread.setDaemon(true);
         this.consumeThread.start();
-        logger.info("WriterAgent started");
+        logger.debug("WriterAgent started");
     }
 
     public void stop() {
@@ -140,7 +140,7 @@ public class WriterAgent {
         // logger.info("writeStore {}", storeDataBatch.toProto());
         //        int queueId = storeDataBatch.getQueueId();
         //        boolean suc = this.bufferQueue.offerQueue(0, storeDataBatch);
-        //        logger.debug("Buffer queue: {}, {}", suc, this.bufferQueue.innerQueueSizes());
+        //        logger.info("Buffer queue: {}, {}", suc, this.bufferQueue.innerQueueSizes());
         this.bufferQueue.put(storeDataBatch);
         return true;
     }
@@ -162,7 +162,7 @@ public class WriterAgent {
                     continue;
                 }
                 long batchSI = batch.getSnapshotId();
-                //                logger.debug("polled one batch [" + batchSI + "]");
+                //                logger.info("polled one batch [" + batchSI + "]");
                 boolean hasDdl = writeEngineWithRetry(batch);
                 if (this.consumeSI < batchSI) {
                     SnapshotInfo availSInfo = this.availSnapshotInfoRef.get();
@@ -173,7 +173,7 @@ public class WriterAgent {
                     this.commitExecutor.execute(this::asyncCommit);
                 }
                 // else { // a flurry of batches with same snapshot ID
-                //  logger.debug("consumedSI {} >= batchSI {}, ignored", consumeSI, batchSI);
+                //  logger.info("consumedSI {} >= batchSI {}, ignored", consumeSI, batchSI);
                 // }
                 if (hasDdl) {
                     this.consumeDdlSnapshotId = batchSI;

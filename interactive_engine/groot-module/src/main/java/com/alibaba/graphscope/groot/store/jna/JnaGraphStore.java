@@ -98,7 +98,7 @@ public class JnaGraphStore implements GraphPartition {
 
     @Override
     public boolean writeBatch(long snapshotId, OperationBatch operationBatch) throws IOException {
-        logger.debug("write batch {}", operationBatch.toProto());
+        logger.info("write batch {}", operationBatch.toProto());
         byte[] dataBytes = operationBatch.toProto().toByteArray();
         try (JnaResponse response =
                 GraphLibrary.INSTANCE.writeBatch(
@@ -188,7 +188,7 @@ public class JnaGraphStore implements GraphPartition {
 
     @Override
     public void compact() throws IOException {
-        logger.debug("compact");
+        logger.info("compact");
         ensurePointer();
         try (JnaResponse response = GraphLibrary.INSTANCE.compact(this.pointer)) {
             if (!response.success()) {

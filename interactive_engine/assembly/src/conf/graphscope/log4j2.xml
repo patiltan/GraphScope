@@ -24,8 +24,12 @@
 
     <Loggers>
         <!-- package loggers -->
-        <Logger name="io.grpc" level="INFO" additivity="true"/>
-        <Logger name="io.netty" level="INFO" additivity="true"/>
+        <Logger name="io.grpc" level="WARN" additivity="true"/>
+        <Logger name="io.netty" level="WARN" additivity="true"/>
+        <Logger name="io.grpc.netty" level="WARN" additivity="true"/>
+        <logger name="i.g.n.s.i.g.n.NettyClientHandler" level="WARN" additivity="true"/>
+        <Logger name="io.grpc.netty.NettyServerHandler" level="WARN" additivity="true"/>
+        <Logger name="io.grpc.netty.NettyClientHandler" level="WARN" additivity="true"/>
         <Logger name="MetricLog" level="INFO" additivity="false">
             <AppenderRef ref="Metric"/>
         </Logger>

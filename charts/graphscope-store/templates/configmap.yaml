@@ -105,6 +105,7 @@ data:
     collect.statistics.initial.delay.min={{ .Values.collect.statistics.initial.delay }}
     log.recycle.offset.reserve={{ .Values.logRecycleOffsetReserve }}
 
+
     ## Extra Config
     {{- if .Values.extraConfig }}
     {{- $config_list := regexSplit ";" .Values.extraConfig -1 }}
@@ -164,6 +165,10 @@ data:
     export OTEL_EXPORTER_OTLP_HEADERS=uptrace-dsn=${UPTRACE_DSN}
     {{- end }}
 
+    {{- if .Values.adot.enabled }}
+    export OTEL_EXPORTER_OTLP_ENDPOINT=http://{{ .Values.adot.endpoint }}:{{ .Values.adot.port }}
+    {{- end }}
+
 
     # For core and heap profiling
     # ulimit -c unlimited
@@ -207,5 +212,6 @@ data:
     echo "" >> ${CONFIG_FILE}
     echo "session:" >> ${CONFIG_FILE}
     echo "  instance_id: demo" >> ${CONFIG_FILE}
+
 
     python3 -m gscoordinator --config-file ${CONFIG_FILE}

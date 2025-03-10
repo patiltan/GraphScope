@@ -24,11 +24,17 @@ import com.alibaba.graphscope.proto.groot.TypeDefPb;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractCreateTypeExecutor extends AbstractDdlExecutor {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(AbstractCreateTypeExecutor.class);
 
     private static final String NAME_REGEX = "^\\w{1,128}$";
 

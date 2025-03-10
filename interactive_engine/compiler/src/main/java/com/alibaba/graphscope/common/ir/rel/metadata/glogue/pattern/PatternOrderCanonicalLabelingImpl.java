@@ -195,7 +195,7 @@ public class PatternOrderCanonicalLabelingImpl extends PatternOrder {
                 for (IsomorphismChecker checker : this.mapCheckerToGroup.keySet()) {
                     if (this.mapCheckerToGroup.get(checker).size()
                             != other.mapCheckerToGroup.get(checker).size()) {
-                        logger.debug(
+                        logger.info(
                                 "In color comparing, numbers of groups for type "
                                         + checker
                                         + " not equal: "
@@ -209,7 +209,7 @@ public class PatternOrderCanonicalLabelingImpl extends PatternOrder {
                         List<Integer> colors2 = other.mapCheckerToGroup.get(checker);
                         colors2.sort(Comparator.naturalOrder());
                         if (!colors1.equals(colors2)) {
-                            logger.debug(
+                            logger.info(
                                     "In groups comparing, groups for type "
                                             + checker
                                             + " not equal: "
