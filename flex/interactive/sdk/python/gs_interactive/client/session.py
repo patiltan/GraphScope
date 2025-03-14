@@ -38,7 +38,7 @@ from gs_interactive.api import GraphServiceVertexManagementApi
 from gs_interactive.api import QueryServiceApi
 from gs_interactive.api import UtilsApi
 from gs_interactive.api_client import ApiClient
-from gs_interactive.client.generated.results_pb2 import CollectiveResults
+# from gs_interactive.client.generated.results_pb2 import CollectiveResults
 from gs_interactive.client.result import Result
 from gs_interactive.client.status import Status
 from gs_interactive.client.status import StatusCode
@@ -293,15 +293,15 @@ class ProcedureInterface(metaclass=ABCMeta):
     ) -> Result[GetProcedureResponse]:
         raise NotImplementedError
 
-    @abstractmethod
-    def call_procedure(
-        self, graph_id: StrictStr, params: QueryRequest
-    ) -> Result[CollectiveResults]:
-        raise NotImplementedError
+    # @abstractmethod
+    # def call_procedure(
+    #     self, graph_id: StrictStr, params: QueryRequest
+    # ) -> Result[CollectiveResults]:
+    #     raise NotImplementedError
 
-    @abstractmethod
-    def call_procedure_current(self, params: QueryRequest) -> Result[CollectiveResults]:
-        raise NotImplementedError
+    # @abstractmethod
+    # def call_procedure_current(self, params: QueryRequest) -> Result[CollectiveResults]:
+    #     raise NotImplementedError
 
     @abstractmethod
     def call_procedure_raw(self, graph_id: StrictStr, params: bytes) -> Result[str]:
@@ -904,55 +904,55 @@ class DefaultSession(Session):
         except Exception as e:
             return Result.from_exception(e)
 
-    def call_procedure(
-        self, graph_id: StrictStr, params: QueryRequest
-    ) -> Result[CollectiveResults]:
-        """
-        Call a procedure in the specified graph.
-        """
+    # def call_procedure(
+    #     self, graph_id: StrictStr, params: QueryRequest
+    # ) -> Result[CollectiveResults]:
+    #     """
+    #     Call a procedure in the specified graph.
+    #     """
+    #
+    #     graph_id = self.ensure_param_str("graph_id", graph_id)
+    #     try:
+    #         # gs_interactive currently support four type of inputformat,
+    #         # see flex/engines/graph_db/graph_db_session.h
+    #         # Here we add byte of value 1 to denote the input format is in json format
+    #         response = self._query_api.call_proc_with_http_info(
+    #             graph_id=graph_id,
+    #             body=append_format_byte(
+    #                 params.to_json().encode(), InputFormat.CYPHER_JSON
+    #             ),
+    #         )
+    #         result = CollectiveResults()
+    #         if response.status_code == 200:
+    #             result.ParseFromString(response.data)
+    #             return Result.ok(result)
+    #         else:
+    #             return Result(Status.from_response(response), result)
+    #     except Exception as e:
+    #         return Result.from_exception(e)
 
-        graph_id = self.ensure_param_str("graph_id", graph_id)
-        try:
-            # gs_interactive currently support four type of inputformat,
-            # see flex/engines/graph_db/graph_db_session.h
-            # Here we add byte of value 1 to denote the input format is in json format
-            response = self._query_api.call_proc_with_http_info(
-                graph_id=graph_id,
-                body=append_format_byte(
-                    params.to_json().encode(), InputFormat.CYPHER_JSON
-                ),
-            )
-            result = CollectiveResults()
-            if response.status_code == 200:
-                result.ParseFromString(response.data)
-                return Result.ok(result)
-            else:
-                return Result(Status.from_response(response), result)
-        except Exception as e:
-            return Result.from_exception(e)
-
-    def call_procedure_current(self, params: QueryRequest) -> Result[CollectiveResults]:
-        """
-        Call a procedure in the current graph.
-        """
-
-        try:
-            # gs_interactive currently support four type of inputformat,
-            # see flex/engines/graph_db/graph_db_session.h
-            # Here we add byte of value 1 to denote the input format is in json format
-            response = self._query_api.call_proc_current_with_http_info(
-                body=append_format_byte(
-                    params.to_json().encode(), InputFormat.CYPHER_JSON
-                )
-            )
-            result = CollectiveResults()
-            if response.status_code == 200:
-                result.ParseFromString(response.data)
-                return Result.ok(result)
-            else:
-                return Result(Status.from_response(response), result)
-        except Exception as e:
-            return Result.from_exception(e)
+    # def call_procedure_current(self, params: QueryRequest) -> Result[CollectiveResults]:
+    #     """
+    #     Call a procedure in the current graph.
+    #     """
+    #
+    #     try:
+    #         # gs_interactive currently support four type of inputformat,
+    #         # see flex/engines/graph_db/graph_db_session.h
+    #         # Here we add byte of value 1 to denote the input format is in json format
+    #         response = self._query_api.call_proc_current_with_http_info(
+    #             body=append_format_byte(
+    #                 params.to_json().encode(), InputFormat.CYPHER_JSON
+    #             )
+    #         )
+    #         result = CollectiveResults()
+    #         if response.status_code == 200:
+    #             result.ParseFromString(response.data)
+    #             return Result.ok(result)
+    #         else:
+    #             return Result(Status.from_response(response), result)
+    #     except Exception as e:
+    #         return Result.from_exception(e)
 
     def call_procedure_raw(self, graph_id: StrictStr, params: bytes) -> Result[str]:
         """
