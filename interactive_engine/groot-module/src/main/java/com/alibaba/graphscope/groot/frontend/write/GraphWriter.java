@@ -281,7 +281,6 @@ public class GraphWriter {
 
     private void addOverwriteVertexOperation(
             OperationBatch.Builder batchBuilder, GraphSchema schema, DataRecord dataRecord) {
-        logger.info("addOverwriteVertexOperation: getVertexRecordKey {} and getProperties {} with schema {}", dataRecord.getVertexRecordKey(), dataRecord.getProperties(), schema);
         VertexRecordKey vertexRecordKey = dataRecord.getVertexRecordKey();
         Map<String, Object> properties = dataRecord.getProperties();
         String label = vertexRecordKey.getLabel();
@@ -292,8 +291,6 @@ public class GraphWriter {
         Map<Integer, PropertyValue> propertyVals = parseRawProperties(vertexDef, properties);
         propertyVals.putAll(pkVals);
         long hashId = getPrimaryKeysHashId(labelId, propertyVals, vertexDef);
-        logger.info("addOverwriteVertexOperation: labelId {} propertyVals {} getPrimaryKeyList {}", labelId, propertyVals, vertexDef.getPrimaryKeyList());
-        logger.info("addOverwriteVertexOperation: hashId {}", hashId);
         batchBuilder.addOperation(
                 new OverwriteVertexOperation(
                         new VertexId(hashId), new LabelId(labelId), propertyVals));
@@ -465,7 +462,6 @@ public class GraphWriter {
             Map<Integer, PropertyValue> properties, GraphElement graphElement) {
         List<GraphProperty> pklist = graphElement.getPrimaryKeyList();
         List<byte[]> pks = new ArrayList<>(pklist.size());
-        logger.info("getPkBytes: pklist {}", pklist);
         for (GraphProperty pk : pklist) {
             byte[] valBytes = properties.get(pk.getId()).getValBytes();
             if (valBytes == null) {
@@ -474,6 +470,19 @@ public class GraphWriter {
             pks.add(valBytes);
         }
         return pks;
+    }
+
+    private static void printPKList(List<GraphProperty> pklist) {
+        // Basic printing
+        logger.info("Primary Key Properties: {}", pklist);
+
+        // Detailed printing
+        logger.info("=== Primary Key Properties ===");
+        for (GraphProperty property : pklist) {
+            logger.info("Property: {}", property.getName());
+            logger.info("  Type: {}", property.getDataType());
+            logger.info("  ID: {}", property.getId());
+        }
     }
 
     public static long getPrimaryKeysHashIdFromRaw(

@@ -49,7 +49,7 @@ test:
 ## GraphScope Store parameters
 ##
 store:
-  replicaCount: 2
+  replicaCount: 8
 
   ## GraphScope store container's resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -71,7 +71,7 @@ store:
     existingClaim: ""
     ## Persistent Volume size
     ##
-    size: 1Gi
+    size: 500Gi
     selector: {}
 
   service:
@@ -154,6 +154,7 @@ frontend:
     nodePorts:
       service: "31394"
       gremlin: "32326"
+      http: "31067"
     ## Service clusterIP
     ##
     # clusterIP: None
@@ -239,7 +240,7 @@ coordinator:
     existingClaim: ""
     ## Persistent Volume size
     ##
-    size: 100Mi
+    size: 10Gi
     selector: {}
 
   ## @param hostAliases pods host aliases
@@ -363,7 +364,7 @@ portal:
     existingClaim: ""
     ## Persistent Volume size
     ##
-    size: 100Mi
+    size: 10Gi
     selector: {}
 
 ## @section Common parameters
@@ -564,7 +565,7 @@ logRecycleOffsetReserve: 86400
 storeDataPath: "/var/lib/graphscope-store"
 storeDataDownloadPath: "/var/lib/graphscope-store/download"
 storeDataSecondaryPath: "/home/graphscope/secondary"
-storeWriteThreadCount: 1
+storeWriteThreadCount: 8
 storeQueueBufferSize: "102400"
 
 storeGcIntervalMs: 5000
@@ -636,7 +637,7 @@ logPersistence:
   accessModes:
   - ReadWriteOnce
   ## Persistent Volume size
-  size: 1Gi
+  size: 10Gi
   ## Persistent Volume annotations
   annotations: {}
   ## Persistent Volume labels

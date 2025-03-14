@@ -37,6 +37,15 @@ spec:
       {{- else if eq .Values.frontend.service.type "ClusterIP" }}
       nodePort: null
       {{- end }}
+    - name: admin
+      port: {{ .Values.frontend.service.httpPort }}
+      protocol: TCP
+      targetPort: admin
+      {{- if and (or (eq .Values.frontend.service.type "NodePort") (eq .Values.frontend.service.type "LoadBalancer")) (not (empty .Values.frontend.service.nodePorts.http)) }}
+      nodePort: {{ .Values.frontend.service.nodePorts.http }}
+      {{- else if eq .Values.frontend.service.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
     - name: gremlin
       port: {{ .Values.frontend.service.gremlinPort }}
       protocol: TCP

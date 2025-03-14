@@ -48,7 +48,7 @@ public class GarbageCollectManager {
                                 CoordinatorSnapshotClient client = clients.getClient(i);
                                 client.synchronizeSnapshot(offlineVersion);
                                 if (i == 0) {
-                                    logger.info("Offline version updated to {}", offlineVersion);
+                                    logger.debug("Offline version updated to {}", offlineVersion);
                                 }
                             }
                         } else {

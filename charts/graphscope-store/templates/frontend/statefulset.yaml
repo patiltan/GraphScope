@@ -114,6 +114,8 @@ spec:
               containerPort: {{ .Values.frontend.service.gremlinPort }}
             - name: inner-rpc
               containerPort: {{ .Values.frontend.service.port }}
+            - name: admin
+              containerPort: {{ .Values.frontend.service.httpPort }}
           {{- if .Values.frontend.resources }}
           resources: {{- toYaml .Values.frontend.resources | nindent 12 }}
           {{- end }}
